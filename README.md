@@ -25,7 +25,7 @@ Here's a **`kubectx`** demo:
 ### Examples
 
 ```sh
-# switch to anoter cluster that's in kubeconfig
+# switch to another cluster that's in kubeconfig
 $ kubectx minikube
 Switched to context "minikube".
 
@@ -33,10 +33,9 @@ Switched to context "minikube".
 $ kubectx -
 Switched to context "oregon".
 
-# create an alias for the context
+# rename context
 $ kubectx dublin=gke_ahmetb_europe-west1-b_dublin
-Context "dublin" set.
-Aliased "gke_ahmetb_europe-west1-b_dublin" as "dublin".
+Context "gke_ahmetb_europe-west1-b_dublin" renamed to "dublin".
 
 # change the active namespace on kubectl
 $ kubens kube-system
@@ -47,6 +46,15 @@ Active namespace is "kube-system".
 $ kubens -
 Context "test" set.
 Active namespace is "default".
+
+# change the active namespace even if it doesn't exist
+$ kubens not-found-namespace --force
+Context "test" set.
+Active namespace is "not-found-namespace".
+---
+$ kubens not-found-namespace -f
+Context "test" set.
+Active namespace is "not-found-namespace".
 ```
 
 If you have [`fzf`](https://github.com/junegunn/fzf) installed, you can also
@@ -77,6 +85,9 @@ this new Go implementation by downloading the binaries from the [**Releases page
 - [with MacPorts (macOS)](#macports-macos)
 - [with apt (Debian)](#apt-debian)
 - [with pacman (Arch Linux)](#pacman-arch-linux)
+- [with Chocolatey (Windows)](#windows-installation-using-chocolatey)
+- [Windows Installation (using Scoop)](#windows-installation-using-scoop)
+- [with winget (Windows)](#windows-installation-using-winget)
 - [manually (macOS & Linux)](#manual-installation-macos-and-linux)
 
 If you like to add context/namespace information to your shell prompt (`$PS1`),
@@ -108,7 +119,7 @@ If you use [Homebrew](https://brew.sh/) you can install like this:
 brew install kubectx
 ```
 
-This command will set up bash/zsh/fish completion scripts automatically.
+This command will set up bash/zsh/fish completion scripts automatically. Make sure you [configure your shell](https://docs.brew.sh/Shell-Completion) to load completions for installed Homebrew formulas.
 
 
 ### MacPorts (macOS)
@@ -140,6 +151,28 @@ Available as official Arch Linux package. Install it via:
 sudo pacman -S kubectx
 ```
 
+### Windows Installation (using Chocolatey)
+
+Available as packages on [Chocolatey](https://chocolatey.org/why-chocolatey)
+```pwsh
+choco install kubens kubectx
+```
+
+### Windows Installation (using Scoop)
+
+Available as packages on [Scoop](https://scoop.sh/)
+```pwsh
+scoop bucket add main
+scoop install main/kubens main/kubectx
+```
+
+### Windows Installation (using winget)
+
+Available as packages on [winget](https://learn.microsoft.com/en-us/windows/package-manager/)
+```pwsh
+winget install --id ahmetb.kubectx
+winget install --id ahmetb.kubens
+```
 
 ### Manual Installation (macOS and Linux)
 
@@ -191,10 +224,11 @@ link or copy them to an existing folder.
 Example with [`oh-my-zsh`](https://github.com/ohmyzsh/ohmyzsh):
 
 ```bash
-mkdir -p ~/.oh-my-zsh/completions
-chmod -R 755 ~/.oh-my-zsh/completions
-ln -s /opt/kubectx/completion/_kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh
-ln -s /opt/kubectx/completion/_kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
+mkdir -p ~/.oh-my-zsh/custom/completions
+chmod -R 755 ~/.oh-my-zsh/custom/completions
+ln -s /opt/kubectx/completion/_kubectx.zsh ~/.oh-my-zsh/custom/completions/_kubectx.zsh
+ln -s /opt/kubectx/completion/_kubens.zsh ~/.oh-my-zsh/custom/completions/_kubens.zsh
+echo "fpath=($ZSH/custom/completions $fpath)" >> ~/.zshrc
 ```
 
 If completion doesn't work, add `autoload -U compinit && compinit` to your
@@ -262,7 +296,7 @@ export KUBECTX_CURRENT_BGCOLOR=$(tput setab 7) # white background
 ```
 
 Colors in the output can be disabled by setting the
-[`NO_COLOR`](http://no-color.org/) environment variable.
+[`NO_COLOR`](https://no-color.org/) environment variable.
 
 -----
 
